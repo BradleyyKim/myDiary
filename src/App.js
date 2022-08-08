@@ -1,20 +1,18 @@
 import Counter from "./Counter";
-import MyFooter from "./MyFooter";
 import MyHeader from "./MyHeader";
 
 function App() {
-  const style = {
-    App: {
-      backgroundColor: "lightblue",
-    },
-    header: {
-      backgroundColor: "red",
-    },
+  const counterProps = {
+    a: 1,
+    b: 2,
+    c: 3,
+    d: 4,
+    initialValue: 5,
   };
   return (
-    <div style={style.App}>
+    <div>
       <MyHeader />
-      <Counter />
+      <Counter {...counterProps} />
     </div>
   );
 }
