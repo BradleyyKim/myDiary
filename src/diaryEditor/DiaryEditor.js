@@ -7,7 +7,7 @@ const DiaryEditor = ({ onCreate }) => {
   const [state, setState] = useState({
     author: "",
     content: "",
-    emotion: "보통 🙂",
+    emotion: "기쁨 🙂",
   });
   const handleChangeState = (e) => {
     setState({
@@ -31,10 +31,10 @@ const DiaryEditor = ({ onCreate }) => {
     setState({
       author: "",
       content: "",
-      emotion: "",
+      emotion: "기쁨 😆",
     });
-    authorInput.current.placeholder = "";
-    textareaContent.current.placeholder = "";
+    authorInput.current.placeholder = "작성자명";
+    textareaContent.current.placeholder = "내용을 입력해주세요...";
     return;
   };
   return (
