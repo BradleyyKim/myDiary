@@ -3,6 +3,11 @@ import styled from "styled-components";
 const Container = styled.section`
   padding-top: 50px;
   color: #0984e3;
+  margin: 0 auto;
+  width: 580px;
+  @media (max-width: 480px) {
+    width: 90%;
+  }
 `;
 
 const H2 = styled.h2`

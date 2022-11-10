@@ -1,14 +1,22 @@
 import styled from "styled-components";
 
 const Container = styled.section`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   border: 1px solid #333;
-  margin: 10px;
+  margin: 10px auto;
   padding: 20px;
   text-align: center;
+  align-items: center;
   border-radius: 20px;
   border: 1px solid #0984e3;
   background-color: #0984e3;
   color: #dff9fb;
+  width: 580px;
+  @media (max-width: 480px) {
+    width: 90%;
+  }
 `;
 
 const Title = styled.h2`
@@ -27,9 +35,8 @@ const Input = styled.input`
   ::placeholder {
     color: black;
   }
-
-  @media (max-width: 580px) {
-    width: 80%;
+  @media (max-width: 480px) {
+    width: 90%;
   }
 `;
 
@@ -46,28 +53,42 @@ const Textarea = styled.textarea`
   ::placeholder {
     color: black;
   }
-  @media (max-width: 580px) {
-    width: 80%;
+  @media (max-width: 480px) {
+    width: 90%;
   }
 `;
 const SelectDiv = styled.div`
   color: #dff9fb;
+  display: flex;
+  align-items: center;
+  width: 500px;
+  justify-content: space-between;
+  margin: 0;
+  @media (max-width: 480px) {
+    width: 90%;
+    margin: 0;
+  }
+`;
+const SelectTxt = styled.div`
+  font-weight: bold;
+  margin-left: 0;
 `;
 const Select = styled.select`
-  width: 300px;
-  padding: 10px;
-  margin-bottom: 20px;
-  margin-left: 20px;
+  padding: 10px 0 10px 10px;
   border: 2px solid #0984e3;
   border-radius: 10px;
-
-  @media (max-width: 580px) {
-    width: 50%;
+  width: 200px;
+  margin-right: 0;
+  text-align: center;
+  @media (max-width: 480px) {
+    width: 150px;
+    margin-right: 0;
   }
 `;
 
 const Button = styled.button`
   width: 500px;
+  margin-top: 10px;
   padding: 10px;
   cursor: pointer;
   border: 2px solid #dff9fb;
@@ -81,9 +102,10 @@ const Button = styled.button`
     background-color: #dff9fb;
     color: #fd79a8;
   }
-  @media (max-width: 580px) {
+  @media (max-width: 480px) {
     width: 50%;
+    margin-top: 20px;
   }
 `;
 
-export { Container, Title, Input, Textarea, SelectDiv, Select, Button };
+export { Container, Title, Input, Textarea, SelectDiv, Select, Button, SelectTxt };

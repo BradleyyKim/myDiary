@@ -1,13 +1,20 @@
 import { useRef, useState } from "react";
-import { Container, Title, Input, Textarea, SelectDiv, Select, Button } from "./style";
+import { Container, Title, Input, Textarea, SelectDiv, Select, Button, SelectTxt } from "./style";
 
 const DiaryEditor = ({ onCreate }) => {
+  const emotions = {
+    1: "기쁨 🙂",
+    2: "좋음 😌",
+    3: "보통 🙂",
+    4: "별로 😕",
+    5: "짜증 😠",
+  };
   const authorInput = useRef();
   const textareaContent = useRef();
   const [state, setState] = useState({
     author: "",
     content: "",
-    emotion: "기쁨 🙂",
+    emotion: emotions[1],
   });
   const handleChangeState = (e) => {
     setState({
@@ -31,7 +38,7 @@ const DiaryEditor = ({ onCreate }) => {
     setState({
       author: "",
       content: "",
-      emotion: "기쁨 😆",
+      emotion: emotions[1],
     });
     authorInput.current.placeholder = "작성자명";
     textareaContent.current.placeholder = "내용을 입력해주세요...";
@@ -49,13 +56,13 @@ const DiaryEditor = ({ onCreate }) => {
         onChange={handleChangeState}
       ></Textarea>
       <SelectDiv>
-        오늘의 감정 점수 :
+        <SelectTxt>오늘의 감정 점수 :</SelectTxt>
         <Select name="emotion" value={state.emotion} onChange={handleChangeState}>
-          <option value={"기쁨 😆"}>기쁨 😆</option>
-          <option value={"좋음 😌"}>좋음 😌</option>
-          <option value={"보통 🙂"}>보통 🙂</option>
-          <option value={"별로 😕"}>별로 😕</option>
-          <option value={"짜증 😠"}>짜증 😠</option>
+          <option value={emotions[1]}>기쁨 😆</option>
+          <option value={emotions[2]}>좋음 😌</option>
+          <option value={emotions[3]}>보통 🙂</option>
+          <option value={emotions[4]}>별로 😕</option>
+          <option value={emotions[5]}>짜증 😠</option>
         </Select>
       </SelectDiv>
       <Button onClick={handleSubmit}>일기 저장하기</Button>
