@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
+import { DiaryDispatchContext } from "../App";
 import { Container, Title, Input, Textarea, SelectDiv, Select, Button, SelectTxt } from "./style";
 
-const DiaryEditor = ({ onCreate }) => {
+const DiaryEditor = () => {
   const emotions = {
     1: "기쁨 🙂",
     2: "좋음 😌",
@@ -9,6 +10,8 @@ const DiaryEditor = ({ onCreate }) => {
     4: "별로 😕",
     5: "짜증 😠",
   };
+
+  const { onCreate } = useContext(DiaryDispatchContext);
   const authorInput = useRef();
   const textareaContent = useRef();
   const [state, setState] = useState({
@@ -70,4 +73,4 @@ const DiaryEditor = ({ onCreate }) => {
   );
 };
 
-export default DiaryEditor;
+export default React.memo(DiaryEditor);

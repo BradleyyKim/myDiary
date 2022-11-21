@@ -1,35 +1,38 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useMemo, useCallback, useReducer } from "react";
 import { createGlobalStyle } from "styled-components";
 import DiaryEditor from "./diaryEditor/DiaryEditor";
 import DiaryList from "./diaryList/DiaryList";
-// const dummyList = [
-//   {
-//     id: "1",
-//     author: "kmy",
-//     content: "hello",
-//     emotion: 1,
-//     create_date: new Date().getTime(),
-//   },
-//   {
-//     id: "2",
-//     author: "bradley",
-//     content: "hello2",
-//     emotion: 3,
-//     create_date: new Date().getTime(),
-//   },
-//   {
-//     id: "3",
-//     author: "Rachael",
-//     content: "hello4",
-//     emotion: 2,
-//     create_date: new Date().getTime(),
-//   },
-// ];
 
-// https://jsonplaceholder.typicode.com/comments
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "INIT": {
+      return action.data;
+    }
+    case "CREATE": {
+      const created_date = new Date().getTime();
+      const newItem = {
+        ...action.data,
+        created_date,
+      };
+      return [newItem, ...state];
+    }
+    case "REMOVE": {
+      return state.filter((item) => item.id !== action.targetId);
+    }
+    case "EDIT": {
+      return state.map((item) => (item.id === action.targetId ? { ...item, content: action.newContent } : item));
+    }
+    default:
+      return state;
+  }
+};
+
+export const DiaryStateContext = React.createContext();
+
+export const DiaryDispatchContext = React.createContext();
 
 function App() {
-  const [data, setData] = useState([]);
+  const [data, dispatch] = useReducer(reducer, []);
 
   const dataId = useRef(0);
 
@@ -37,7 +40,6 @@ function App() {
     const res = await fetch("https://jsonplaceholder.typicode.com/comments").then((res) => res.json());
 
     const initData = res.slice(0, 20).map((item) => {
-      console.log(item);
       return {
         author: item.email,
         content: item.body,
@@ -46,42 +48,55 @@ function App() {
         id: dataId.current++,
       };
     });
-    setData(initData);
+
+    dispatch({ type: "INIT", data: initData });
   };
 
   useEffect(() => {
     getData();
   }, []);
 
-  const onCreate = (author, content, emotion) => {
-    const created_date = new Date().getTime();
-    const newItem = {
-      author,
-      content,
-      emotion,
-      created_date,
-      id: dataId.current,
-    };
+  const onCreate = useCallback((author, content, emotion) => {
+    dispatch({ type: "CREATE", data: { author, content, emotion, id: dataId.current } });
     dataId.current += 1;
-    setData([newItem, ...data]);
-  };
+  }, []);
 
-  const onRemove = (targetId) => {
-    console.log(`${targetId}가 삭제되었습니다.`);
-    const listAfterRemove = data.filter((list) => list.id !== targetId);
-    setData(listAfterRemove);
-  };
+  const onRemove = useCallback((targetId) => {
+    dispatch({ type: "REMOVE", targetId });
+  }, []);
 
-  const onEdit = (targetId, newContent) => {
-    setData(data.map((it) => (it.id === targetId ? { ...it, content: newContent } : it)));
-  };
+  const onEdit = useCallback((targetId, newContent) => {
+    dispatch({ type: "EDIT", targetId, newContent });
+  }, []);
+
+  const memoizedDispatches = useMemo(() => {
+    return { onCreate, onRemove, onEdit };
+  }, []);
+
+  const getDiaryAnalysis = useMemo(() => {
+    const goodCount = data.filter((item) => item.emotion >= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100;
+
+    return { goodCount, badCount, goodRatio };
+  }, [data.length]);
+
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
 
   return (
-    <article>
-      <GlobalStyles />
-      <DiaryEditor onCreate={onCreate} />
-      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
-    </article>
+    <DiaryStateContext.Provider value={data}>
+      <DiaryDispatchContext.Provider value={memoizedDispatches}>
+        <article>
+          <GlobalStyles />
+          <DiaryEditor />
+          <div>전체 일기 : {data.length}</div>
+          <div>기분 좋은 일기 : {goodCount}</div>
+          <div>기분 나쁜 일기 : {badCount}</div>
+          <div>기분 좋은 일기 비율 : {goodRatio}%</div>
+          <DiaryList />
+        </article>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 }
 

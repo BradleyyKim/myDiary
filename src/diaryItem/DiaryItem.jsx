@@ -14,9 +14,12 @@ import EditIcon from "../asset/pen-solid.svg";
 import RemoveIcon from "../asset/trash-can-solid.svg";
 import CompleteIcon from "../asset/check-solid.svg";
 import xmarkIcon from "../asset/xmark-solid.svg";
-import { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
+import { DiaryDispatchContext } from "../App";
 
-const DiaryItem = ({ onRemove, id, author, content, emotion, created_date, onEdit }) => {
+const DiaryItem = ({ id, author, content, emotion, created_date }) => {
+  const { onEdit, onRemove } = useContext(DiaryDispatchContext);
+
   const handleRemove = () => {
     if (window.confirm(`${id + 1}번째 일기를 정말로 삭제하시겠습니까?`)) {
       onRemove(id);
@@ -79,4 +82,4 @@ const DiaryItem = ({ onRemove, id, author, content, emotion, created_date, onEdi
   );
 };
 
-export default DiaryItem;
+export default React.memo(DiaryItem);
